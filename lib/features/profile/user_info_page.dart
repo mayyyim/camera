@@ -1,5 +1,8 @@
+import 'package:cameraApp/shared/Widget/basic_header.dart';
+import 'package:cameraApp/shared/Widget/divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class UserInfoPage extends ConsumerStatefulWidget {
   const UserInfoPage({super.key});
@@ -14,28 +17,49 @@ class UserInfoPageState extends ConsumerState<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('个人资料'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: const Text('头像'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to avatar edit page or show avatar options
-            },
-          ),
-          ListTile(
-            title: const Text('昵称'),
-            subtitle: const Text('请输入昵称'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to nickname edit page
-            },
-          ),
-          // Add more ListTiles for other profile items
-        ],
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            BasicHeader(text: "个人资料"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SettingDivider(),
+                  ),
+                  ListTile(
+                    title: const Text('头像'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      /// TODO
+                      /// avatar setting
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SettingDivider(),
+                  ),
+                  ListTile(
+                    title: const Text('昵称'),
+
+                    /// TODO nickname
+                    subtitle: const Text(''),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      context.push('/setting/nickname');
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -75,4 +99,3 @@ class UserHeader extends StatelessWidget {
     );
   }
 }
-

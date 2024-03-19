@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:cameraApp/features/photo/photo_edit_provider.dart';
+import 'package:cameraApp/features/watermark/watermark_edit_sheet.dart';
+import 'package:cameraApp/features/watermark/watermark_provider.dart';
+import 'package:cameraApp/shared/Widget/basic_header.dart';
 import 'package:cameraApp/utils/image_loader_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,53 +62,24 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Container(
-                decoration: const BoxDecoration(color: Colors.white),
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // 用来切换闪光灯状态的UI按钮
-                      IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            context.pop();
-                            ref.read(photoEditorProvider.notifier).clear();
-                          }),
-
-                      const Text(
-                        "图片编辑",
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF3F3F3F)),
-                      ),
-
-                      // 顶部工具栏的设置图标
-                      GestureDetector(
-                        onTap: () {
-                          List<GlobalKey> keyList = [];
-                          ref
-                              .read(photoEditorProvider)
-                              .photos
-                              .forEach((element) {
-                            keyList.add(element.key);
-                          });
-                          print("MJ: test baocun");
-                          saveImg(keyList);
-                        },
-                        child: Image.asset(
-                          "assets/icon/baocun.png",
-                          width: 60,
-                        ),
-                      )
-                    ],
-                  ),
+              BasicHeader(
+                text: "图片编辑",
+                widget: Image.asset(
+                  "assets/icon/baocun.png",
+                  width: 60,
                 ),
+                onBackTap: () {
+                  context.pop();
+                  ref.read(photoEditorProvider.notifier).clear();
+                },
+                onWidgetTap: () {
+                  List<GlobalKey> keyList = [];
+                  ref.read(photoEditorProvider).photos.forEach((element) {
+                    keyList.add(element.key);
+                  });
+                  print("MJ: test baocun");
+                  saveImg(keyList);
+                },
               ),
               buildPageView(),
               const SizedBox(
@@ -178,7 +152,22 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
   }
 
   Widget watermarkWidget() {
-    return const Text("假装是水印");
+    print(
+        "MJ: water mark widget rebuild ${ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.day.visible}");
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const WatermarkEditBottomSheet(),
+        );
+      },
+      child: ref
+              .read(watermarkEditProvider)
+              .currentWatermark
+              .toWatermarkWidget() ??
+          Container(),
+    );
   }
 
   Widget textWidget() {
@@ -287,8 +276,8 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
                         child: textWidget(),
                       ),
                       Positioned(
-                        left: 20,
-                        bottom: 20,
+                        left: 10,
+                        bottom: 0,
                         child: watermarkWidget(),
                       ),
                     ],
@@ -308,6 +297,7 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
         onPageChanged: (page) {
           setState(() {
             ref.read(photoEditorProvider.notifier).setCurrentIndex(page);
+            ref.read(watermarkEditProvider.notifier).setCurrentIndex(page);
           });
         },
       ),

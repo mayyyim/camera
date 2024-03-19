@@ -2,14 +2,13 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
-import 'package:cameraApp/model/watermark.dart';
+import 'package:cameraApp/model/watermark/watermark_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart'; // 导入 image 库
+import 'package:path_provider/path_provider.dart';
 
 class PhotoState {
-  final Watermark? watermark;
+  final WatermarkItem? watermarkItem;
   final String file;
   final String text;
   final Offset textPosition;
@@ -18,7 +17,7 @@ class PhotoState {
 
   PhotoState({
     required this.file,
-    required this.watermark,
+    required this.watermarkItem,
     this.text = '',
     this.textPosition = Offset.zero,
     required this.key,
@@ -26,7 +25,7 @@ class PhotoState {
   });
 
   PhotoState copyWith({
-    Watermark? watermark,
+    WatermarkItem? watermarkItem,
     String? file,
     String? text,
     Offset? textPosition,
@@ -34,7 +33,7 @@ class PhotoState {
   }) {
     return PhotoState(
       file: file ?? this.file,
-      watermark: watermark ?? this.watermark,
+      watermarkItem: watermarkItem ?? this.watermarkItem,
       text: text ?? this.text,
       textPosition: textPosition ?? this.textPosition,
       key: this.key,
@@ -43,7 +42,6 @@ class PhotoState {
   }
 }
 
-// 定义编辑器的状态
 class PhotoEditorState {
   List<PhotoState> photos;
   int currentIndex;
@@ -59,7 +57,8 @@ class PhotoEditorNotifier extends StateNotifier<PhotoEditorState> {
 
   // 添加照片
   void addPhoto(String file) {
-    state.photos.add(PhotoState(file: file, watermark: null, key: GlobalKey()));
+    state.photos
+        .add(PhotoState(file: file, watermarkItem: null, key: GlobalKey()));
   }
 
   // 删除照片
@@ -105,7 +104,7 @@ class PhotoEditorNotifier extends StateNotifier<PhotoEditorState> {
   }
 
   // 添加水印
-  void updateWatermark(int photoIndex, Watermark watermark) {
+  void updateWatermark(int photoIndex, WatermarkItem watermarkItem) {
     /// TODO
     state = state.copyWith(photos: List.from(state.photos));
   }
@@ -120,7 +119,7 @@ class PhotoEditorNotifier extends StateNotifier<PhotoEditorState> {
     List<PhotoState> photoStates = [];
     for (var element in xFiles) {
       PhotoState photoState =
-          PhotoState(file: element.path, watermark: null, key: GlobalKey());
+          PhotoState(file: element.path, watermarkItem: null, key: GlobalKey());
       photoStates.add(photoState);
     }
     state = state.copyWith(photos: photoStates);

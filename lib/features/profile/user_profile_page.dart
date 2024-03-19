@@ -1,4 +1,7 @@
 import 'package:cameraApp/features/profile/user_profile_provider.dart';
+import 'package:cameraApp/shared/Widget/basic_button.dart';
+import 'package:cameraApp/shared/Widget/basic_header.dart';
+import 'package:cameraApp/shared/Widget/divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +24,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     username = ref.read(userProvider).username;
     avatarUrl = ref.read(userProvider).avatarUrl;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -39,41 +43,69 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     title: const Text('卡密激活'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // 卡密激活逻辑
+                      context.push('/setting/activation');
                     },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SettingDivider(),
                   ),
                   ListTile(
                     title: const Text('用户协议'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // 用户协议逻辑
+                      context.push('/setting/term');
                     },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SettingDivider(),
                   ),
                   ListTile(
                     title: const Text('隐私政策'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // 隐私政策逻辑
+                      context.push('/setting/privacy');
                     },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SettingDivider(),
                   ),
                   ListTile(
                     title: const Text('软件条款'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // 软件条款逻辑
+                      context.push('/setting/software');
                     },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.0),
+                    child: SettingDivider(),
                   ),
                   ListTile(
                     title: const Text('新版本体验'),
                     subtitle: const Text('V1.0.0'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // 新版本体验逻辑
+                      /// TODO
+                      /// 新版本
                     },
                   ),
                 ],
               ),
             ),
+            /// TODO
+            /// 判断是否登录
+            BasicButton(
+              text: "退出登录",
+              onTap: () {
+                /// TODO
+                /// logout
+              },
+              backgroundColor: Color(0xFFF5F7FA),
+              textColor: Colors.red,
+            )
           ],
         ),
       ),
@@ -121,26 +153,13 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 
   Widget buildHeader() {
-    return Container(
-      height: 40,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-              onPressed: () {
-                context.pop();
-              },
-              icon: const Icon(Icons.arrow_back_ios_new)),
-          IconButton(
-              onPressed: () {
-                /// TODO
-                /// share
-              },
-              icon: const Icon(Icons.share)),
-        ],
-      ),
+    return BasicHeader(
+      text: '',
+      widget: const Icon(Icons.share),
+      onWidgetTap: () {
+        /// TODO
+        /// share
+      },
     );
   }
 }

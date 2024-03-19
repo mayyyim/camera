@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
-import 'package:cameraApp/features/photo/photo_edit_provider.dart';
 import 'package:cameraApp/shared/data/data.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 enum CameraMode {
   photo,
   video,
+}
+
+enum CameraAspectRatio {
+  one, // 1:1
+  two, // 4:3
+  three // 16:9
 }
 
 class CameraState {
@@ -18,6 +24,9 @@ class CameraState {
   final List<CameraDescription> cameras; // 可用摄像头的列表
   final int selectedCameraIndex; // 当前选中的摄像头索引
   final CameraMode cameraMode;
+  final CameraAspectRatio cameraAspectRatio;
+  final int delayInSecond;
+  final String clarity;
 
   CameraState({
     this.cameraController,
@@ -27,6 +36,9 @@ class CameraState {
     this.cameras = const [],
     this.selectedCameraIndex = 0,
     this.cameraMode = CameraMode.photo,
+    this.cameraAspectRatio = CameraAspectRatio.two,
+    this.delayInSecond = 0,
+    this.clarity = '720p',
   });
 
   CameraState copyWith({
@@ -37,6 +49,9 @@ class CameraState {
     List<CameraDescription>? cameras,
     int? selectedCameraIndex,
     CameraMode? cameraMode,
+    CameraAspectRatio? cameraAspectRatio,
+    int? delayInSecond,
+    String? clarity,
   }) {
     return CameraState(
       cameraController: cameraController ?? this.cameraController,
@@ -46,6 +61,9 @@ class CameraState {
       cameras: cameras ?? this.cameras,
       selectedCameraIndex: selectedCameraIndex ?? this.selectedCameraIndex,
       cameraMode: cameraMode ?? this.cameraMode,
+      cameraAspectRatio: cameraAspectRatio ?? this.cameraAspectRatio,
+      delayInSecond: delayInSecond ?? this.delayInSecond,
+      clarity: clarity ?? this.clarity,
     );
   }
 }
@@ -86,14 +104,60 @@ class CameraNotifier extends StateNotifier<CameraState> {
   // 拍照功能
   Future<XFile?> takePicture() async {
     if (!state.isInitialized) return null;
-    try {
-      final pictureFile = await state.cameraController!.takePicture();
-      state = state.copyWith(pictureFile: pictureFile);
-      return pictureFile;
-    } catch (e) {
-      print(e);
+    ImageFormatGroup imageFormatGroup;
+    switch (state.cameraAspectRatio) {
+      case CameraAspectRatio.one:
+        imageFormatGroup = ImageFormatGroup.jpeg;
+        break;
+      case CameraAspectRatio.two:
+        imageFormatGroup = ImageFormatGroup.yuv420;
+        break;
+      case CameraAspectRatio.three:
+        imageFormatGroup = ImageFormatGroup.bgra8888;
+        break;
+      default:
+        imageFormatGroup = ImageFormatGroup.bgra8888;
+        break;
     }
-    return null;
+    // 设置了延时
+    XFile? pictureFile;
+    Timer(Duration(seconds: state.delayInSecond), () async {
+      pictureFile = await state.cameraController!.takePicture();
+      state = state.copyWith(pictureFile: pictureFile);
+    });
+    return pictureFile;
+  }
+
+  void updateAspectRatio(CameraAspectRatio cameraAspectRatio) {
+    state = state.copyWith(cameraAspectRatio: cameraAspectRatio);
+  }
+
+  void updateDelay(int delay) {
+    state = state.copyWith(delayInSecond: delay);
+  }
+
+  // 设置了视频清晰度
+  void updateVideoClarity(String clarity) {
+    ResolutionPreset resolutionPreset;
+    switch (clarity) {
+      case "480p":
+        resolutionPreset = ResolutionPreset.low;
+        break;
+      case "720p":
+        resolutionPreset = ResolutionPreset.medium;
+        break;
+      case "1080p":
+        resolutionPreset = ResolutionPreset.high;
+        break;
+      default:
+        resolutionPreset = ResolutionPreset.medium;
+        break;
+    }
+    var currentCamera = _availableCameras!.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.back);
+    state = state.copyWith(
+        cameraController: CameraController(currentCamera, resolutionPreset),
+        clarity: clarity);
   }
 
   Future<void> setFlashMode(FlashMode mode) async {

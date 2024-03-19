@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:cameraApp/features/camera/camera_provider.dart';
 import 'package:cameraApp/features/photo/photo_edit_provider.dart';
+import 'package:cameraApp/features/watermark/watermark_provider.dart';
 import 'package:cameraApp/shared/Widget/camera_model_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -127,6 +128,9 @@ class CameraPageState extends ConsumerState<CameraPage> {
                         .setPhotos(imageFiles);
 
                     if (imageFiles.isNotEmpty) {
+                      await ref
+                          .read(watermarkEditProvider.notifier)
+                          .initWatermark(imageFiles.length);
                       // ignore: use_build_context_synchronously
                       context.push('/photo/edit');
                     }
@@ -197,6 +201,7 @@ class CameraPageState extends ConsumerState<CameraPage> {
           XFile? file = await ref.read(cameraProvider.notifier).takePicture();
           if (file != null) {
             ref.read(photoEditorProvider.notifier).setPhotos([file]);
+            await ref.read(watermarkEditProvider.notifier).initWatermark(1);
             // ignore: use_build_context_synchronously
             context.push('/photo/edit');
           }
