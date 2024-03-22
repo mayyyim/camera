@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:cameraApp/features/camera/camera_provider.dart';
 import 'package:cameraApp/features/photo/photo_edit_provider.dart';
 import 'package:cameraApp/features/watermark/watermark_provider.dart';
+import 'package:cameraApp/features/watermark/watermark_select_sheet.dart';
 import 'package:cameraApp/shared/Widget/camera_model_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -152,7 +153,9 @@ class CameraPageState extends ConsumerState<CameraPage> {
                         height: 20,
                       ),
                       '水印', () {
-                    /// TODO  shuiyin
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) => const WatermarkSelectorSheet());
                   }),
                   _buildIconWithLabel(
                       Image.asset(

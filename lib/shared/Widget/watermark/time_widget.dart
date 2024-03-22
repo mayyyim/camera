@@ -6,8 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class TimeWidget extends ConsumerStatefulWidget {
   final TextObject hour;
   final TextObject minute;
+  final Color textColor;
+  final double textSize;
 
-  const TimeWidget({super.key, required this.hour, required this.minute});
+  const TimeWidget({
+    super.key,
+    required this.hour,
+    required this.minute,
+    this.textColor = Colors.white,
+    this.textSize = 23,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -22,26 +30,27 @@ class TimeWidgetState extends ConsumerState<TimeWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Visibility(
           visible: widget.hour.visible,
           child: Text(
             widget.hour.text, // 第一行文本
-            style: const TextStyle(
-              fontSize: 30.0,
+            style: TextStyle(
+              fontSize: widget.textSize,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: widget.textColor,
             ),
           ),
         ),
         Visibility(
           visible: widget.hour.visible,
-          child: const Text(
+          child: Text(
             ":", // 第一行文本
             style: TextStyle(
-              fontSize: 30.0,
+              fontSize: widget.textSize,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: widget.textColor,
             ),
           ),
         ),
@@ -49,10 +58,10 @@ class TimeWidgetState extends ConsumerState<TimeWidget> {
           visible: widget.minute.visible,
           child: Text(
             widget.minute.text, // 第一行文本
-            style: const TextStyle(
-              fontSize: 30.0,
+            style: TextStyle(
+              fontSize: widget.textSize,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: widget.textColor,
             ),
           ),
         ),

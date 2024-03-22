@@ -5,8 +5,8 @@ import 'package:cameraApp/shared/Widget/watermark/watermark_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Watermark1 extends WaterMarkWidget {
-  const Watermark1({super.key, required WatermarkUIObject watermarkUIObject})
+class Watermark10 extends WaterMarkWidget {
+  const Watermark10({super.key, required WatermarkUIObject watermarkUIObject})
       : super(watermarkUIObject: watermarkUIObject);
 
   @override
@@ -50,6 +50,11 @@ class Watermark1 extends WaterMarkWidget {
                   minute: watermarkUIObject.minute,
                   textColor: Colors.black,
                 ),
+                Visibility(
+                  visible: watermarkUIObject.imageObject?.visible ?? false,
+                  child: Image.asset(watermarkUIObject.imageObject?.url ??
+                      "assets/icon/caijian.png"),
+                )
               ],
             ),
           ),
@@ -109,7 +114,7 @@ class Watermark1 extends WaterMarkWidget {
     );
   }
 
-  static Watermark1 defaultData() {
-    return Watermark1(watermarkUIObject: WatermarkUIObject.defaultData());
+  static Watermark10 defaultData() {
+    return Watermark10(watermarkUIObject: WatermarkUIObject.defaultData());
   }
 }

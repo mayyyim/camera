@@ -146,11 +146,9 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
       ),
     );
   }
-
   void _saveImage() {
     // 这里应该添加保存图片的逻辑
   }
-
   Widget watermarkWidget() {
     print(
         "MJ: water mark widget rebuild ${ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.day.visible}");

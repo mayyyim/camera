@@ -1,15 +1,17 @@
+import 'package:cameraApp/constants.dart';
+import 'package:cameraApp/features/watermark/watermark_provider.dart';
+import 'package:cameraApp/shared/Widget/watermark/watermark_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WatermarkBottomSheet extends ConsumerStatefulWidget {
-  const WatermarkBottomSheet({super.key});
+class WatermarkSelectorSheet extends ConsumerStatefulWidget {
+  const WatermarkSelectorSheet({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _WatermarkBottomSheetState createState() => _WatermarkBottomSheetState();
+  _WatermarkSelectorSheetState createState() => _WatermarkSelectorSheetState();
 }
 
-class _WatermarkBottomSheetState extends ConsumerState<WatermarkBottomSheet>
+class _WatermarkSelectorSheetState extends ConsumerState<WatermarkSelectorSheet>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -20,31 +22,128 @@ class _WatermarkBottomSheetState extends ConsumerState<WatermarkBottomSheet>
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: '水印模板'),
+            Tab(text: '我的收藏'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          WatermarkTemplateView(),
+          MyFavoritesView(),
+        ],
+      ),
+    );
+  }
+}
+
+class WatermarkTemplateView extends ConsumerStatefulWidget {
+  const WatermarkTemplateView({super.key});
+
+  @override
+  _WatermarkTemplateViewState createState() => _WatermarkTemplateViewState();
+}
+
+class _WatermarkTemplateViewState extends ConsumerState<WatermarkTemplateView> {
+  // The index of the selected watermark category
+  int _selectedCategoryIndex = 0;
+
+  // Dummy list of categories for demonstration purposes
+  final List<String> _categories = [
+    '全部',
+    '现场拍照',
+    '时间记录',
+    '叮叮记录',
+    '建筑工程',
+    '巡检维修',
+    '物业管理'
+  ];
+
+  // Function to handle category selection
+  void _onCategoryTap(int index) {
+    setState(() {
+      _selectedCategoryIndex = index;
+    });
+    // Load or update watermarks for the selected category
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
-        children: <Widget>[
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              const Tab(text: '水印'),
-              const Tab(text: '我的收藏'),
-            ],
+        children: [
+          Container(
+            height: 60,
+            // ListView to scroll through the categories
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _categories.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () => _onCategoryTap(index),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    alignment: Alignment.center,
+                    child: Text(
+                      _categories[index],
+                      style: TextStyle(
+                        color: _selectedCategoryIndex == index
+                            ? Colors.blue
+                            : Colors.grey,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                const WatermarkTabContent(), // Content for the Watermark tab
-                const FavoritesTabContent(), // Content for the Favorites tab
-              ],
+            // GridView.builder to display watermarks for the selected category
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns
+                childAspectRatio: 3 / 2, // Aspect ratio of each grid cell
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: Constants
+                  .WATERMARKS_WIDGETS_LISTS[_selectedCategoryIndex].length,
+              // Replace with actual number of watermarks
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    ref
+                        .read(watermarkEditProvider.notifier)
+                        .updateCurrentPhotoWatermark(Constants
+                            .WATERMARKS_LISTS[_selectedCategoryIndex][index]
+                            .id);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF626871),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.expand(),
+                      child: Constants
+                              .WATERMARKS_WIDGETS_LISTS[_selectedCategoryIndex]
+                          [index],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -53,34 +152,42 @@ class _WatermarkBottomSheetState extends ConsumerState<WatermarkBottomSheet>
   }
 }
 
-class WatermarkTabContent extends StatelessWidget {
-  const WatermarkTabContent({super.key});
+class MyFavoritesView extends StatelessWidget {
+  const MyFavoritesView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder for watermark tab content
-    return const Center(
-      child: Text('水印内容'),
+    // Replace with actual favorite watermark data
+    return ListView(
+      children: const [
+        // Add more WatermarkCards...
+      ],
     );
   }
 }
 
-class FavoritesTabContent extends StatelessWidget {
-  const FavoritesTabContent({super.key});
+class WatermarkCard extends StatelessWidget {
+  final WaterMarkWidget waterMarkWidget;
+
+  final bool isFavorited;
+
+  const WatermarkCard({
+    Key? key,
+    required this.isFavorited,
+    required this.waterMarkWidget,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder for favorites tab content
-    return const Center(
-      child: Text('我的收藏内容'),
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.access_time, color: Colors.blue),
+        title: waterMarkWidget,
+        trailing: Icon(
+          isFavorited ? Icons.star : Icons.star_border,
+          color: isFavorited ? Colors.yellow : Colors.grey,
+        ),
+      ),
     );
   }
-}
-
-void showWatermarkEditBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (context) => const WatermarkBottomSheet(),
-  );
 }

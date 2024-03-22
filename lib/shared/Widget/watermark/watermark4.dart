@@ -5,8 +5,8 @@ import 'package:cameraApp/shared/Widget/watermark/watermark_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Watermark1 extends WaterMarkWidget {
-  const Watermark1({super.key, required WatermarkUIObject watermarkUIObject})
+class Watermark4 extends WaterMarkWidget {
+  const Watermark4({super.key, required WatermarkUIObject watermarkUIObject})
       : super(watermarkUIObject: watermarkUIObject);
 
   @override
@@ -65,14 +65,10 @@ class Watermark1 extends WaterMarkWidget {
               ),
               Expanded(
                 child: Visibility(
-                  visible: watermarkUIObject.location?.visible ?? false,
+                  visible: watermarkUIObject.location.visible,
                   child: Text(
-                    watermarkUIObject.location != null
-                        ? watermarkUIObject.location!.text +
-                            "\n" +
-                            watermarkUIObject.jindu.text +
-                            " " +
-                            watermarkUIObject.weidu.text
+                    watermarkUIObject.location.text != ""
+                        ? "${watermarkUIObject.location.text}\n${watermarkUIObject.jindu.text} ${watermarkUIObject.weidu.text}"
                         : "开启定位服务",
                     style: const TextStyle(
                       fontSize: 13.0,
@@ -109,7 +105,7 @@ class Watermark1 extends WaterMarkWidget {
     );
   }
 
-  static Watermark1 defaultData() {
-    return Watermark1(watermarkUIObject: WatermarkUIObject.defaultData());
+  static Watermark4 defaultData() {
+    return Watermark4(watermarkUIObject: WatermarkUIObject.defaultData());
   }
 }

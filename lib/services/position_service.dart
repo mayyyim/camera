@@ -2,8 +2,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class PositionService {
-  static late String latitude;
-  static late String longitude;
+  static late String latitude = "";
+  static late String longitude = "";
 
   static Future<Position?> getLocation() async {
     bool serviceEnabled;
@@ -26,7 +26,6 @@ class PositionService {
       // 权限被永久拒绝，我们无法请求权限
       return null;
     }
-
     Position position = await Geolocator.getCurrentPosition();
     latitude = position.latitude.toString();
     longitude = position.longitude.toString();
@@ -50,5 +49,9 @@ class PositionService {
     } on Exception catch (e) {
       print('An error occurred while getting address: $e');
     }
+  }
+
+  static Future<String> getWeather() async {
+    return "晴";
   }
 }
