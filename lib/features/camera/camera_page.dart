@@ -25,9 +25,7 @@ class CameraPageState extends ConsumerState<CameraPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 0), () {
-      setState(() {
-        ref.read(watermarkEditProvider.notifier).initWatermark(length: 1);
-      });
+      ref.read(watermarkEditProvider.notifier).initWatermark(length: 1);
     });
   }
 
@@ -157,7 +155,6 @@ class CameraPageState extends ConsumerState<CameraPage> {
                   List<XFile> imageFiles =
                       await ref.read(cameraProvider.notifier).pickPhotos(ref);
                   ref.read(photoEditorProvider.notifier).setPhotos(imageFiles);
-
                   if (imageFiles.isNotEmpty) {
                     await ref
                         .read(watermarkEditProvider.notifier)
@@ -183,6 +180,7 @@ class CameraPageState extends ConsumerState<CameraPage> {
                       height: 20,
                     ),
                     '水印', () {
+                  print("MJ: test water mark on tap");
                   showModalBottomSheet(
                       context: context,
                       builder: (context) => const WatermarkSelectorSheet());
@@ -202,15 +200,15 @@ class CameraPageState extends ConsumerState<CameraPage> {
 
   Widget _buildIconWithLabel(
       Widget widget, String label, Function() onPressed) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GestureDetector(
-          onTap: onPressed,
-          child: widget,
-        ),
-        Text(label, style: const TextStyle(fontSize: 12)), // 根据您的设计调整样式
-      ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          widget,
+          Text(label, style: const TextStyle(fontSize: 12)), // 根据您的设计调整样式
+        ],
+      ),
     );
   }
 

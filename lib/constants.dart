@@ -50,6 +50,7 @@ import 'package:cameraApp/shared/Widget/watermark/watermark95.dart';
 import 'package:cameraApp/shared/Widget/watermark/watermark_widget.dart';
 
 class Constants {
+  static String WEATHER_API_KEY = "9c3dd1f2859340f9bde0d5c3f10d1726";
   static String PRIVACY_POLICY_URL = "www.baidu.com";
   static String USER_AGREEMENT_URL = "";
   static List<WatermarkItem> ALL_WATERMARKS = SHIJIANJILU_WATERMARKS +

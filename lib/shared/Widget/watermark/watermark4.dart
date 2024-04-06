@@ -23,56 +23,57 @@ class Watermark4 extends WaterMarkWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(3)),
-              color: Colors.white,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    color: Colors.yellow,
-                  ),
-                  child: Visibility(
-                    visible: watermarkUIObject.dakabiaotiText?.visible ?? false,
-                    child: Text(
-                      watermarkUIObject.dakabiaotiText?.text ?? '',
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontFamily: "Ali",
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 2,
-                ),
-                Visibility(
-                  visible: watermarkUIObject.day.visible,
-                  child: Text(
-                    "${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "RobotoRegular",
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(3)),
+            color: Colors.white,
           ),
-          Row(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  color: Colors.yellow,
+                ),
+                child: Visibility(
+                  visible: watermarkUIObject.dakabiaotiText?.visible ?? false,
+                  child: Text(
+                    watermarkUIObject.dakabiaotiText?.text ?? '',
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontFamily: "Ali",
+                        fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              Visibility(
+                visible: watermarkUIObject.day.visible,
+                child: Text(
+                  "${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}",
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontFamily: "RobotoRegular",
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          constraints: BoxConstraints(maxWidth: 200),
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -98,29 +99,29 @@ class Watermark4 extends WaterMarkWidget {
               ),
             ],
           ),
-          Visibility(
-            visible: watermarkUIObject.beizhuText?.visible ?? false,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-              decoration: const BoxDecoration(color: Color(0x1A888888)),
-              child: Text(
-                watermarkUIObject.beizhuText?.text ?? "",
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w500),
-              ),
+        ),
+        Visibility(
+          visible: watermarkUIObject.beizhuText?.visible ?? false,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+            decoration: const BoxDecoration(color: Color(0x1A888888)),
+            child: Text(
+              watermarkUIObject.beizhuText?.text ?? "",
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
-          Visibility(
-              visible: watermarkUIObject.shijianyanzhengText?.visible ?? false,
-              child: Text(
-                watermarkUIObject.shijianyanzhengText?.text ?? "",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400),
-              ))
-        ],
-      ),
+        ),
+        Visibility(
+            visible: watermarkUIObject.shijianyanzhengText?.visible ?? false,
+            child: Text(
+              watermarkUIObject.shijianyanzhengText?.text ?? "",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400),
+            ))
+      ],
     );
   }
 

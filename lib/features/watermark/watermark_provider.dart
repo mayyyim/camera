@@ -282,13 +282,13 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
   WatermarkEditNotifier() : super(WatermarkEditState(watermarks: []));
 
   Future<int> initWatermark({int length = 1}) async {
+    // 设置默认值
     WatermarkData defaultData = WatermarkData(
       dateTime: DateTime.now(),
-      position: await PositionService.getLocation(),
-      weather: await PositionService.getWeather(),
+      position: await PositionService.getDefaultLocation(),
+      weather: await PositionService.getDefaultWeather(),
     );
-
-    List<WatermarkState> watermarks = List.generate(
+    List<WatermarkState> defaultWatermarks = List.generate(
       length,
       (i) => WatermarkState(
         watermarkItem: WatermarkItem(id: "1", tag: WatermarkTag.shijianjilu),
@@ -296,6 +296,27 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
         watermarkUIObject: WatermarkUIObject.fromData(defaultData),
       ),
     );
+    state = state.copyWith(watermarks: defaultWatermarks);
+    List<dynamic> results = await Future.wait([
+      PositionService.getLocation(),
+      PositionService.getWeather(),
+    ]);
+
+    String position = results[0];
+    String weather = results[1];
+
+    List<WatermarkState> watermarks = List.generate(
+      length,
+      (i) => WatermarkState(
+        watermarkItem: WatermarkItem(id: "1", tag: WatermarkTag.shijianjilu),
+        position: Offset.zero,
+        watermarkUIObject: WatermarkUIObject.fromData(defaultData.copyWith(
+          position: position,
+          weather: weather,
+        )),
+      ),
+    );
+
     state = state.copyWith(watermarks: watermarks);
     return watermarks.length;
   }
