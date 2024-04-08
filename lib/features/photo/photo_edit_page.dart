@@ -34,7 +34,10 @@ class PhotoEditPage extends ConsumerStatefulWidget {
 class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
   final _textEditingController = TextEditingController();
   Offset _textPosition = Offset.zero;
+  late Offset _watermarkPosition;
   bool _isDragging = false;
+  bool _isDraggingWatermark = false;
+  bool _isScalingWatermark = false;
   FocusNode focusNode = FocusNode();
   late VideoPlayerController _controller;
   late GlobalKey _watermarkKey;
@@ -42,6 +45,8 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
   @override
   void initState() {
     super.initState();
+    _watermarkPosition =
+        ref.read(photoEditorProvider).photos[0].watermarkPosition;
     _textEditingController.addListener(_textChanged);
     if (!widget.isPhoto) {
       File file = File(ref.read(photoEditorProvider).photos.first.file);
@@ -224,18 +229,71 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
   Widget watermarkWidget() {
     WaterMarkWidget waterMarkWidget =
         ref.watch(watermarkEditProvider).currentWatermark.toWatermarkWidget();
-    return RepaintBoundary(
-      key: _watermarkKey,
-      child: GestureDetector(
-        onTap: () {
-          showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            builder: (context) =>
-                WatermarkEditBottomSheet(waterMarkWidget.watermarkVisibleMap),
-          );
-        },
-        child: waterMarkWidget ?? Container(),
+    double scale = ref.watch(photoEditorProvider).currentPhoto.watermarkScale;
+
+    return GestureDetector(
+      // 缩放手势
+      // onScaleStart: (details) {
+      //   setState(() {
+      //     _isScalingWatermark = true;
+      //   });
+      // },
+      // onScaleUpdate: (details) {
+      //   if (_isScalingWatermark) {
+      //     setState(() {
+      //       double newScale = details.scale;
+      //       // 限制缩放范围
+      //       newScale = newScale.clamp(0.5, 2.0);
+      //       // 更新水印大小
+      //       ref
+      //           .read(photoEditorProvider.notifier)
+      //           .updateCurrentFileWatermarkScale(newScale);
+      //     });
+      //   }
+      // },
+      // onScaleEnd: (details) {
+      //   setState(() {
+      //     _isScalingWatermark = false;
+      //   });
+      // },
+      // 拖动手势
+      onPanStart: (details) {
+        setState(() {
+          _isDraggingWatermark = true;
+        });
+      },
+      onPanUpdate: (details) {
+        if (_isDraggingWatermark) {
+          setState(() {
+            // 更新水印位置
+            _watermarkPosition += details.delta;
+            ref
+                .read(photoEditorProvider.notifier)
+                .updateCurrentFileWatermarkPosition(_watermarkPosition);
+          });
+        }
+      },
+      onPanEnd: (details) {
+        setState(() {
+          _isDraggingWatermark = false;
+        });
+      },
+      child: Transform.scale(
+        scale: scale,
+        child: RepaintBoundary(
+          key: _watermarkKey,
+          child: GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => WatermarkEditBottomSheet(
+                    waterMarkWidget.watermarkVisibleMap),
+              );
+            },
+            child: waterMarkWidget ?? Container(),
+          ),
+        ),
       ),
     );
   }
@@ -290,6 +348,7 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
   }
 
   Widget buildPageView() {
+    print("MJ: test build page view");
     return SizedBox(
       height: MediaQuery.of(context).size.height - 180,
       child: PageView.builder(
@@ -297,6 +356,8 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
         itemBuilder: (context, index) {
           Offset textOffset =
               ref.read(photoEditorProvider).photos[index].textPosition;
+          Offset watermarkOffset =
+              ref.read(photoEditorProvider).photos[index].watermarkPosition;
           return SizedBox(
             height: MediaQuery.of(context).size.height - 230,
             child: Column(
@@ -352,8 +413,8 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
                         child: textWidget(),
                       ),
                       Positioned(
-                        left: 10,
-                        bottom: 10,
+                        left: watermarkOffset.dx,
+                        top: watermarkOffset.dy,
                         child: watermarkWidget(),
                       ),
                     ],

@@ -14,6 +14,8 @@ class PhotoState {
   final Offset textPosition;
   final GlobalKey key;
   final bool isBorderRadius;
+  final Offset watermarkPosition;
+  final double watermarkScale;
 
   PhotoState({
     required this.file,
@@ -22,6 +24,8 @@ class PhotoState {
     this.textPosition = Offset.zero,
     required this.key,
     this.isBorderRadius = false,
+    this.watermarkPosition = const Offset(20.0, 20.0),
+    this.watermarkScale = 1,
   });
 
   PhotoState copyWith({
@@ -30,6 +34,8 @@ class PhotoState {
     String? text,
     Offset? textPosition,
     bool? isBorderRadius,
+    Offset? watermarkPosition,
+    double? watermarkScale,
   }) {
     return PhotoState(
       file: file ?? this.file,
@@ -38,6 +44,8 @@ class PhotoState {
       textPosition: textPosition ?? this.textPosition,
       key: this.key,
       isBorderRadius: isBorderRadius ?? this.isBorderRadius,
+      watermarkPosition: watermarkPosition ?? this.watermarkPosition,
+      watermarkScale: watermarkScale ?? this.watermarkScale,
     );
   }
 }
@@ -99,6 +107,21 @@ class PhotoEditorNotifier extends StateNotifier<PhotoEditorState> {
     List<PhotoState> photos = state.photos;
     PhotoState newPhoto =
         state.currentPhoto.copyWith(textPosition: textPosition);
+    photos.replaceRange(state.currentIndex, state.currentIndex + 1, [newPhoto]);
+    state = state.copyWith(photos: photos);
+  }
+
+  void updateCurrentFileWatermarkPosition(Offset watermarkPosition) {
+    List<PhotoState> photos = state.photos;
+    PhotoState newPhoto =
+        state.currentPhoto.copyWith(watermarkPosition: watermarkPosition);
+    photos.replaceRange(state.currentIndex, state.currentIndex + 1, [newPhoto]);
+    state = state.copyWith(photos: photos);
+  }
+
+  void updateCurrentFileWatermarkScale(double scale) {
+    List<PhotoState> photos = state.photos;
+    PhotoState newPhoto = state.currentPhoto.copyWith(watermarkScale: scale);
     photos.replaceRange(state.currentIndex, state.currentIndex + 1, [newPhoto]);
     state = state.copyWith(photos: photos);
   }

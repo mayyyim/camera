@@ -281,7 +281,8 @@ class WatermarkEditState {
 class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
   WatermarkEditNotifier() : super(WatermarkEditState(watermarks: []));
 
-  Future<int> initWatermark({int length = 1}) async {
+  Future<int> initWatermark(
+      {int length = 1, required Offset watermarkOffset}) async {
     // 设置默认值
     WatermarkData defaultData = WatermarkData(
       dateTime: DateTime.now(),
@@ -309,7 +310,7 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
       length,
       (i) => WatermarkState(
         watermarkItem: WatermarkItem(id: "1", tag: WatermarkTag.shijianjilu),
-        position: Offset.zero,
+        position: watermarkOffset,
         watermarkUIObject: WatermarkUIObject.fromData(defaultData.copyWith(
           position: position,
           weather: weather,
@@ -319,6 +320,15 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
 
     state = state.copyWith(watermarks: watermarks);
     return watermarks.length;
+  }
+
+  void updateCurrentFileWatermarkPosition(Offset watermarkPosition) {
+    List<WatermarkState> watermarks = state.watermarks;
+    WatermarkState newWatermarkState =
+        state.currentWatermark.copyWith(position: watermarkPosition);
+    watermarks.replaceRange(
+        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
   }
 
   void updateWatermark(int index, WatermarkState watermark) {
