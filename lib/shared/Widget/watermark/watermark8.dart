@@ -16,6 +16,7 @@ class Watermark8 extends WaterMarkWidget {
               jindu: true,
               weidu: true,
               beizhuText: true,
+              suduText: true,
               position: true),
         );
 
@@ -115,6 +116,16 @@ class Watermark8 extends WaterMarkWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5, vertical: 3),
                       child: Text("·${watermarkUIObject.beizhuText?.text}",
+                          style: Style.watermarkSmallWhite),
+                    ),
+                  ),
+                  Visibility(
+                    visible: watermarkUIObject.suduText?.visible ?? false,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Color(0xAA111111)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 3),
+                      child: Text("速度：${watermarkUIObject.suduText?.text}",
                           style: Style.watermarkSmallWhite),
                     ),
                   ),

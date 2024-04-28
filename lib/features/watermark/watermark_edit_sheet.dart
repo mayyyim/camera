@@ -17,18 +17,12 @@ class WatermarkEditBottomSheet extends ConsumerStatefulWidget {
   }
 }
 
-class WatermarkEditBottomSheetState
-    extends ConsumerState<WatermarkEditBottomSheet> {
+class WatermarkEditBottomSheetState extends ConsumerState<WatermarkEditBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final settingsList = [];
 
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .dateTime) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.dateTime) {
       settingsList.add(
         WatermarkSettingItem(
             text: "显示时间",
@@ -39,126 +33,63 @@ class WatermarkEditBottomSheetState
                 builder: (context) => const DatePicker(),
               );
             },
-            value: ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .day
-                .visible,
+            value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.day.visible,
             switchTap: () {
-              bool originVisible = ref
-                  .read(watermarkEditProvider)
-                  .currentWatermark
-                  .watermarkUIObject
-                  .day
-                  .visible;
+              bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.day.visible;
               setState(() {
-                ref
-                    .read(watermarkEditProvider.notifier)
-                    .updateCurrentDateVisible(!originVisible);
+                ref.read(watermarkEditProvider.notifier).updateCurrentDateVisible(!originVisible);
               });
             }),
       );
     }
 
     /// add location setting
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .position) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.position) {
       settingsList.add(WatermarkSettingItem(
           text: "地点",
           onTap: () {
             context.push("/edit/地点");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .location!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.location!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .location!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.location!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentLocalVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentLocalVisible(!originVisible);
             });
           }));
     }
 
     /// 经度
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .jindu) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.jindu) {
       settingsList.add(WatermarkSettingItem(
           text: "经度",
           onTap: () {
             context.push("/edit/经度");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .jindu!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.jindu!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .jindu!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.jindu!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentJinduVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentJinduVisible(!originVisible);
             });
           }));
     }
 
     /// 纬度
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .weidu) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.weidu) {
       settingsList.add(
         WatermarkSettingItem(
           text: "纬度",
           onTap: () {
             context.push("/edit/纬度");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .weidu!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.weidu!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .weidu!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.weidu!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentWeiduVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentWeiduVisible(!originVisible);
             });
           },
         ),
@@ -167,36 +98,19 @@ class WatermarkEditBottomSheetState
 
     /// 天气字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .weather) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.weather) {
       settingsList.add(
         WatermarkSettingItem(
           text: "天气",
           onTap: () {
             context.push("/edit/天气");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .weather!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.weather!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .weather!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.weather!.visible;
             setState(
               () {
-                ref
-                    .read(watermarkEditProvider.notifier)
-                    .updateCurrentWeatherVisible(!originVisible);
+                ref.read(watermarkEditProvider.notifier).updateCurrentWeatherVisible(!originVisible);
               },
             );
           },
@@ -206,204 +120,123 @@ class WatermarkEditBottomSheetState
 
     /// 时间验证字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .shijianyanzhengText) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.shijianyanzhengText) {
       settingsList.add(WatermarkSettingItem(
           text: "时间验证",
           onTap: () {
             context.push("/edit/时间验证");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .shijianyanzhengText!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.shijianyanzhengText!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .shijianyanzhengText!
-                .visible;
+            bool originVisible =
+                ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.shijianyanzhengText!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentShijianyanzhengVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentShijianyanzhengVisible(!originVisible);
             });
           }));
     }
 
     /// 自定义字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .customized) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.customized) {
       settingsList.add(WatermarkSettingItem(
           text: "自定义字段",
           onTap: () {
             context.push("/edit/自定义");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .customized!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.customized!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .customized!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.customized!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentCustomizedVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentCustomizedVisible(!originVisible);
+            });
+          }));
+    }
+
+    /// 速度字段
+    ///
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.suduText) {
+      settingsList.add(WatermarkSettingItem(
+          text: "速度",
+          onTap: () {
+            context.push("/edit/速度");
+          },
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.suduText!.visible,
+          switchTap: () {
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.suduText!.visible;
+            setState(() {
+              ref.read(watermarkEditProvider.notifier).updateSuduVisibility(!originVisible);
             });
           }));
     }
 
     /// 备注字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .beizhuText) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.beizhuText) {
       settingsList.add(WatermarkSettingItem(
           text: "备注",
           onTap: () {
             context.push("/edit/备注");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .beizhuText!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.beizhuText!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .beizhuText!
-                .visible;
+            bool originVisible = ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.beizhuText!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentBeizhuVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentBeizhuVisible(!originVisible);
             });
           }));
     }
 
     /// 巡检人字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .xunjianrenText) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.xunjianrenText) {
       settingsList.add(WatermarkSettingItem(
           text: "巡检人",
           onTap: () {
             context.push("/edit/巡检人");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .xunjianrenText!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianrenText!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .xunjianrenText!
-                .visible;
+            bool originVisible =
+                ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianrenText!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentXunjianrenVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentXunjianrenVisible(!originVisible);
             });
           }));
     }
 
     /// 巡检区域字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .xunjianquyuText) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.xunjianquyuText) {
       settingsList.add(WatermarkSettingItem(
           text: "巡检区域",
           onTap: () {
             context.push("/edit/巡检区域");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .xunjianquyuText!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianquyuText!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .xunjianquyuText!
-                .visible;
+            bool originVisible =
+                ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianquyuText!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentXunjianquyuVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentXunjianquyuVisible(!originVisible);
             });
           }));
     }
 
     /// 巡检类型字段
     ///
-    if (ref
-        .read(watermarkEditProvider)
-        .currentWatermark
-        .toWatermarkWidget()
-        .watermarkVisibleMap
-        .xunjianleixingText) {
+    if (ref.read(watermarkEditProvider).currentWatermark.toWatermarkWidget().watermarkVisibleMap.xunjianleixingText) {
       settingsList.add(WatermarkSettingItem(
           text: "巡检类型",
           onTap: () {
             context.push("/edit/巡检类型");
           },
-          value: ref
-              .read(watermarkEditProvider)
-              .currentWatermark
-              .watermarkUIObject
-              .xunjianleixingText!
-              .visible,
+          value: ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianleixingText!.visible,
           switchTap: () {
-            bool originVisible = ref
-                .read(watermarkEditProvider)
-                .currentWatermark
-                .watermarkUIObject
-                .xunjianleixingText!
-                .visible;
+            bool originVisible =
+                ref.read(watermarkEditProvider).currentWatermark.watermarkUIObject.xunjianleixingText!.visible;
             setState(() {
-              ref
-                  .read(watermarkEditProvider.notifier)
-                  .updateCurrentXunjianleixingVisible(!originVisible);
+              ref.read(watermarkEditProvider.notifier).updateCurrentXunjianleixingVisible(!originVisible);
             });
           }));
     }
@@ -422,17 +255,12 @@ class WatermarkEditBottomSheetState
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.white, width: 3, style: BorderStyle.solid),
+                border: Border.all(color: Colors.white, width: 3, style: BorderStyle.solid),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
-              child: ref
-                      .watch(watermarkEditProvider)
-                      .currentWatermark
-                      .toWatermarkWidget() ??
-                  Container(),
+              child: ref.watch(watermarkEditProvider).currentWatermark.toWatermarkWidget() ?? Container(),
             ),
           ),
         ),
@@ -495,9 +323,7 @@ class WatermarkEditBottomSheetState
                         ),
                       ),
                     ),
-                    index == settingsList.length
-                        ? Container()
-                        : const SettingDivider()
+                    index == settingsList.length ? Container() : const SettingDivider()
                   ],
                 );
               },

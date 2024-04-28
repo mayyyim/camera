@@ -52,8 +52,7 @@ class Watermark33 extends WaterMarkWidget {
               const SizedBox(
                 width: 3,
               ),
-              Text("${watermarkUIObject.location?.text}",
-                  style: Style.watermarkSmallWhite),
+              Text("${watermarkUIObject.location?.text}", style: Style.watermarkSmallWhite),
             ],
           ),
         ),
@@ -83,21 +82,21 @@ class Watermark33 extends WaterMarkWidget {
           height: 3,
         ),
         Visibility(
-            visible: watermarkUIObject.beizhuText?.visible ?? false,
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.note,
-                  color: Colors.white,
-                  size: 15,
-                ),
-                const SizedBox(
-                  width: 3,
-                ),
-                Text("${watermarkUIObject.beizhuText?.text ?? ""}",
-                    style: Style.watermarkSmallWhite),
-              ],
-            )),
+          visible: watermarkUIObject.beizhuText?.visible ?? false,
+          child: Row(
+            children: [
+              const Icon(
+                Icons.note,
+                color: Colors.white,
+                size: 15,
+              ),
+              const SizedBox(
+                width: 3,
+              ),
+              Text("${watermarkUIObject.beizhuText?.text ?? ""}", style: Style.watermarkSmallWhite),
+            ],
+          ),
+        ),
       ],
     );
   }

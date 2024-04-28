@@ -13,6 +13,7 @@ class Watermark18 extends WaterMarkWidget {
             dateTime: true,
             weidu: true,
             beizhuText: true,
+            suduText: true,
             position: true,
           ),
         );
@@ -45,10 +46,7 @@ class Watermark18 extends WaterMarkWidget {
                       child: Text(
                         "${watermarkUIObject.year.text}.${watermarkUIObject.month.text}.${watermarkUIObject.day.text}",
                         style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "clock"),
+                            fontSize: 13, color: Colors.black, fontWeight: FontWeight.w600, fontFamily: "clock"),
                       ),
                     ),
                     Visibility(
@@ -56,10 +54,7 @@ class Watermark18 extends WaterMarkWidget {
                       child: Text(
                         "${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}:${watermarkUIObject.second.text}",
                         style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "clock"),
+                            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600, fontFamily: "clock"),
                       ),
                     ),
                   ],
@@ -69,13 +64,15 @@ class Watermark18 extends WaterMarkWidget {
           ),
           Visibility(
             visible: watermarkUIObject.beizhuText?.visible ?? false,
-            child: Text("${watermarkUIObject.beizhuText?.text ?? ""}",
-                style: Style.watermarkLargeWhite),
+            child: Text("${watermarkUIObject.beizhuText?.text ?? ""}", style: Style.watermarkLargeWhite),
           ),
           Visibility(
             visible: watermarkUIObject.location?.visible ?? false,
-            child: Text("${watermarkUIObject.location?.text ?? ""}",
-                style: Style.watermarkLargeWhite),
+            child: Text("${watermarkUIObject.location?.text ?? ""}", style: Style.watermarkLargeWhite),
+          ),
+          Visibility(
+            visible: watermarkUIObject.suduText?.visible ?? false,
+            child: Text("速度:${watermarkUIObject.suduText?.text ?? ""}", style: Style.watermarkLargeWhite),
           ),
         ],
       ),

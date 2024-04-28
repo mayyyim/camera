@@ -39,11 +39,9 @@ class TextEditPageState extends ConsumerState<TextEditPage> {
                   context.pop();
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  decoration: const BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  decoration:
+                      const BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: const Text(
                     "保存",
                     style: TextStyle(color: Colors.white),
@@ -84,25 +82,17 @@ class TextEditPageState extends ConsumerState<TextEditPage> {
         ref.read(watermarkEditProvider.notifier).updateCurrentBeizhu(content);
         break;
       case "巡检人":
-        ref
-            .read(watermarkEditProvider.notifier)
-            .updateCurrentXunjianren(content);
+        ref.read(watermarkEditProvider.notifier).updateCurrentXunjianren(content);
         break;
       case "巡检区域":
-        ref
-            .read(watermarkEditProvider.notifier)
-            .updateCurrentXunjianquyu(content);
+        ref.read(watermarkEditProvider.notifier).updateCurrentXunjianquyu(content);
         break;
       case "巡检类型":
-        ref
-            .read(watermarkEditProvider.notifier)
-            .updateCurrentXunjianleixing(content);
+        ref.read(watermarkEditProvider.notifier).updateCurrentXunjianleixing(content);
         break;
 
       case "自定义":
-        ref
-            .read(watermarkEditProvider.notifier)
-            .updateCurrentCustomized(content);
+        ref.read(watermarkEditProvider.notifier).updateCurrentCustomized(content);
         break;
 
       case "地点":
@@ -125,6 +115,51 @@ class TextEditPageState extends ConsumerState<TextEditPage> {
         ref.read(watermarkEditProvider.notifier).updateCurrentShijianyanzheng(content);
         break;
 
+      case "速度":
+        ref.read(watermarkEditProvider.notifier).updateCurrentSudu(content);
+        break;
+      case "添加自定义项":
+        ref.read(watermarkEditProvider.notifier).updateCurrentTianjiazidingyi(content);
+        break;
+      case "编号":
+        ref.read(watermarkEditProvider.notifier).updateCurrenBianhao(content);
+        break;
+      case "手机号":
+        ref.read(watermarkEditProvider.notifier).updateCurrentshoujihao(content);
+        break;
+      case "IMEI":
+        ref.read(watermarkEditProvider.notifier).updateCurrentIMEI(content);
+        break;
+      case "计数":
+        ref.read(watermarkEditProvider.notifier).updateCurrentjishu(content);
+        break;
+      case "监理责任人":
+        ref.read(watermarkEditProvider.notifier).updateCurrentjianlifuzeren(content);
+        break;
+      case "竣工倒计时":
+        ref.read(watermarkEditProvider.notifier).updateCurrentjungongdaojishi(content);
+        break;
+      case "建设单位":
+        ref.read(watermarkEditProvider.notifier).updateCurrentjianshedanwei(content);
+        break;
+      case "监理单位":
+        ref.read(watermarkEditProvider.notifier).updateCurrentjianlidanwei(content);
+        break;
+      case "设计单位":
+        ref.read(watermarkEditProvider.notifier).updateCurrentshejidanwei(content);
+        break;
+      case "勘察单位":
+        ref.read(watermarkEditProvider.notifier).updateCurrentKanchadanwei(content);
+        break;
+      case "描述":
+        ref.read(watermarkEditProvider.notifier).updateCurrentmiaoshu(content);
+        break;
+      case "大标题":
+        ref.read(watermarkEditProvider.notifier).updateCurrentDabiaoti(content);
+        break;
+      case "小标题":
+        ref.read(watermarkEditProvider.notifier).updateCurrentXiaobiaoti(content);
+        break;
     }
   }
 }

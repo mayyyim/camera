@@ -16,6 +16,7 @@ class Watermark10 extends WaterMarkWidget {
               jindu: true,
               weidu: true,
               beizhuText: true,
+              suduText: true,
               position: true,
               shijianyanzhengText: true),
         );
@@ -47,10 +48,7 @@ class Watermark10 extends WaterMarkWidget {
                     child: Text(
                       watermarkUIObject.dakabiaotiText?.text ?? '',
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: "han"),
+                          color: Colors.black, fontSize: 12, fontWeight: FontWeight.w900, fontFamily: "han"),
                     ),
                   ),
                 ),
@@ -59,18 +57,13 @@ class Watermark10 extends WaterMarkWidget {
                 ),
                 Visibility(
                   visible: watermarkUIObject.hour.visible,
-                  child: Text(
-                      "${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}",
+                  child: Text("${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}",
                       style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "clock")),
+                          fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600, fontFamily: "clock")),
                 ),
                 Visibility(
                   visible: watermarkUIObject.imageObject?.visible ?? false,
-                  child: Image.asset(watermarkUIObject.imageObject?.url ??
-                      "assets/icon/caijian.png"),
+                  child: Image.asset(watermarkUIObject.imageObject?.url ?? "assets/icon/caijian.png"),
                 )
               ],
             ),
@@ -111,8 +104,18 @@ class Watermark10 extends WaterMarkWidget {
               decoration: const BoxDecoration(color: Color(0x1A888888)),
               child: Text(
                 watermarkUIObject.beizhuText?.text ?? "",
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w500),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: watermarkUIObject.suduText?.visible ?? false,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+              decoration: const BoxDecoration(color: Color(0x1A888888)),
+              child: Text(
+                "速度" + (watermarkUIObject.suduText?.text ?? ""),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ),
           ),
@@ -120,10 +123,7 @@ class Watermark10 extends WaterMarkWidget {
               visible: watermarkUIObject.shijianyanzhengText?.visible ?? false,
               child: Text(
                 watermarkUIObject.shijianyanzhengText?.text ?? "",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400),
+                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
               ))
         ],
       ),
