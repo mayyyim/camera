@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cameraApp/features/watermark/watermark_provider.dart';
 import 'package:cameraApp/model/watermark/watermark_object.dart';
 import 'package:cameraApp/shared/Widget/watermark/time_widget.dart';
@@ -10,12 +12,14 @@ class Watermark2 extends WaterMarkWidget {
       : super(
           watermarkUIObject: watermarkUIObject,
           watermarkVisibleMap: WatermarkVisibleMap(
-              dateTime: true,
-              weather: true,
-              jindu: true,
-              weidu: true,
-              position: true,
-              beizhuText: true),
+            dateTime: true,
+            weather: true,
+            jindu: true,
+            weidu: true,
+            position: true,
+            beizhuText: true,
+            suduText: true,
+          ),
         );
 
   @override
@@ -101,6 +105,16 @@ class Watermark2 extends WaterMarkWidget {
                     ),
                   ),
                   Visibility(
+                    visible: watermarkUIObject.suduText?.visible ?? false,
+                    child: Text(
+                      "速度" + (watermarkUIObject.suduText?.text ?? ""),
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Visibility(
                     visible: watermarkUIObject.jindu?.visible ?? false,
                     child: Text(
                       "经度" + (watermarkUIObject.jindu?.text ?? ""),
@@ -128,9 +142,7 @@ class Watermark2 extends WaterMarkWidget {
           const SizedBox(height: 6.0), // 更大的间距
           Expanded(
             child: Text(
-              watermarkUIObject.location != null
-                  ? watermarkUIObject.location!.text
-                  : "请开启定位服务",
+              watermarkUIObject.location != null ? watermarkUIObject.location!.text : "请开启定位服务",
               style: const TextStyle(
                 fontSize: 14.0,
                 color: Colors.white,

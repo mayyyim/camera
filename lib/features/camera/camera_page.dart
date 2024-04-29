@@ -21,11 +21,18 @@ class CameraPage extends ConsumerStatefulWidget {
 }
 
 class CameraPageState extends ConsumerState<CameraPage> {
+  bool _isDraggingWatermark = false;
+  Offset _watermarkPosition = const Offset(20.0, 20.0);
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 0), () {
-      ref.read(watermarkEditProvider.notifier).initWatermark(length: 1);
+      ref
+          .read(watermarkEditProvider.notifier)
+          .initWatermark(length: 1, watermarkOffset: Offset(20.0, 80.0));
+      _watermarkPosition =
+          ref.watch(watermarkEditProvider).currentWatermark.position;
     });
   }
 
@@ -33,6 +40,13 @@ class CameraPageState extends ConsumerState<CameraPage> {
   Widget build(BuildContext context) {
     final cameraState = ref.watch(cameraProvider);
     bool showWatermark = ref.watch(watermarkEditProvider).showWatermark;
+    // 设备尺寸
+    final Size size = MediaQuery.of(context).size;
+    // 设备像素比
+    final double deviceRatio = size.width / (size.height);
+    // 相机纵横比
+    final double aspectRatio = cameraState.cameraController!.value.aspectRatio;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -49,15 +63,23 @@ class CameraPageState extends ConsumerState<CameraPage> {
                     /// TODO
                     /// bili
                     height: MediaQuery.of(context).size.height - 282,
-                    width: MediaQuery.of(context).size.width,
                     child: cameraState.isInitialized
-                        ? CameraPreview(cameraState.cameraController!)
+                        ? Transform.scale(
+                            scale: 1,
+                            child: AspectRatio(
+                                aspectRatio: aspectRatio,
+                                child: CameraPreview(
+                                    cameraState.cameraController!)),
+                          )
                         : const Center(
                             child: CircularProgressIndicator(),
                           ),
                   ),
                   if (showWatermark)
-                    Positioned(left: 20, bottom: 20, child: watermarkWidget()),
+                    Positioned(
+                        left: _watermarkPosition.dx,
+                        top: _watermarkPosition.dy,
+                        child: watermarkWidget()),
                 ],
               ),
             ),
@@ -158,7 +180,9 @@ class CameraPageState extends ConsumerState<CameraPage> {
                   if (imageFiles.isNotEmpty) {
                     await ref
                         .read(watermarkEditProvider.notifier)
-                        .initWatermark(length: imageFiles.length);
+                        .initWatermark(
+                            length: imageFiles.length,
+                            watermarkOffset: _watermarkPosition);
                     // ignore: use_build_context_synchronously
                     context.push('/photo/edit/true');
                   }
@@ -180,7 +204,6 @@ class CameraPageState extends ConsumerState<CameraPage> {
                       height: 20,
                     ),
                     '水印', () {
-                  print("MJ: test water mark on tap");
                   showModalBottomSheet(
                       context: context,
                       builder: (context) => const WatermarkSelectorSheet());
@@ -250,6 +273,9 @@ class CameraPageState extends ConsumerState<CameraPage> {
               print("MJ: test file is $file");
               if (file != null) {
                 ref.read(photoEditorProvider.notifier).setPhotos([file]);
+                ref
+                    .read(photoEditorProvider.notifier)
+                    .updateCurrentFileWatermarkPosition(_watermarkPosition);
                 context.push('/photo/edit/true');
               }
             } else {
@@ -257,6 +283,9 @@ class CameraPageState extends ConsumerState<CameraPage> {
                   await ref.read(cameraProvider.notifier).toggleRecording();
               if (file != null) {
                 ref.read(photoEditorProvider.notifier).setPhotos([file]);
+                ref
+                    .read(photoEditorProvider.notifier)
+                    .updateCurrentFileWatermarkPosition(_watermarkPosition);
                 context.push('/photo/edit/false');
               }
             }
@@ -272,6 +301,26 @@ class CameraPageState extends ConsumerState<CameraPage> {
       WaterMarkWidget waterMarkWidget =
           ref.watch(watermarkEditProvider).currentWatermark.toWatermarkWidget();
       return GestureDetector(
+        onPanUpdate: (details) {
+          if (_isDraggingWatermark) {
+            setState(() {
+              _watermarkPosition += details.delta;
+              ref
+                  .read(watermarkEditProvider.notifier)
+                  .updateCurrentFileWatermarkPosition(_watermarkPosition);
+            });
+          }
+        },
+        onPanStart: (details) {
+          setState(() {
+            _isDraggingWatermark = true;
+          });
+        },
+        onPanEnd: (details) {
+          setState(() {
+            _isDraggingWatermark = false;
+          });
+        },
         onTap: () {
           showModalBottomSheet(
             context: context,

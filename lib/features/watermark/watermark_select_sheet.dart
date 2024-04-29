@@ -189,7 +189,6 @@ class _WatermarkTemplateViewState extends ConsumerState<WatermarkTemplateView> {
                                 isSelected
                                     ? GestureDetector(
                                         onTap: () {
-                                          print("MJ: test to edit page");
                                           context.pop();
                                           showModalBottomSheet(
                                             context: context,

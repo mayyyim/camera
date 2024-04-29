@@ -14,6 +14,7 @@ class Watermark78 extends WaterMarkWidget {
               beizhuText: true,
               position: true,
               customized: true,
+              suduText: true,
               shijianyanzhengText: true),
         );
 
@@ -94,6 +95,20 @@ class Watermark78 extends WaterMarkWidget {
                         size: 15,
                       ),
                       Text(watermarkUIObject.beizhuText?.text ?? "",
+                          style: Style.watermarkSmallWhite),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: watermarkUIObject.suduText?.visible ?? false,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.speed_outlined,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                      Text(watermarkUIObject.suduText?.text ?? "",
                           style: Style.watermarkSmallWhite),
                     ],
                   ),

@@ -281,7 +281,7 @@ class WatermarkEditState {
 class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
   WatermarkEditNotifier() : super(WatermarkEditState(watermarks: []));
 
-  Future<int> initWatermark({int length = 1}) async {
+  Future<int> initWatermark({int length = 1, required Offset watermarkOffset}) async {
     // 设置默认值
     WatermarkData defaultData = WatermarkData(
       dateTime: DateTime.now(),
@@ -309,7 +309,7 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
       length,
       (i) => WatermarkState(
         watermarkItem: WatermarkItem(id: "1", tag: WatermarkTag.shijianjilu),
-        position: Offset.zero,
+        position: watermarkOffset,
         watermarkUIObject: WatermarkUIObject.fromData(defaultData.copyWith(
           position: position,
           weather: weather,
@@ -319,6 +319,13 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
 
     state = state.copyWith(watermarks: watermarks);
     return watermarks.length;
+  }
+
+  void updateCurrentFileWatermarkPosition(Offset watermarkPosition) {
+    List<WatermarkState> watermarks = state.watermarks;
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(position: watermarkPosition);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
   }
 
   void updateWatermark(int index, WatermarkState watermark) {
@@ -335,319 +342,561 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
 
   void updateCurrentDate(DateTime dateTime) {
     List<WatermarkState> watermarks = state.watermarks;
-    WatermarkUIObject newWatermarkUIObject =
-        state.currentWatermark.watermarkUIObject.updateDateTime(dateTime);
-    WatermarkState newWatermarkState = state.currentWatermark
-        .copyWith(watermarkUIObject: newWatermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    WatermarkUIObject newWatermarkUIObject = state.currentWatermark.watermarkUIObject.updateDateTime(dateTime);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: newWatermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   void updateCurrentDateVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.setTimeVisible(visible);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.setTimeVisible(visible);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新location可见性
   void updateCurrentLocalVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.setLocationVisible(visible);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.setLocationVisible(visible);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新location信息
   void updateCurrentLocation(String location) {
     List<WatermarkState> watermarks = state.watermarks;
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.updateLocation(location);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.updateLocation(location);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新天气可见性
   void updateCurrentWeatherVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject weather = state.currentWatermark.watermarkUIObject.weather!
-        .copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(weather: weather);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject weather = state.currentWatermark.watermarkUIObject.weather!.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(weather: weather);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新天气信息
   void updateCurrentWeather(String weatherString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject weather = state.currentWatermark.watermarkUIObject.weather!
-        .copyWith(text: weatherString);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(weather: weather);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject weather = state.currentWatermark.watermarkUIObject.weather!.copyWith(text: weatherString);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(weather: weather);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新时间验证可见性
   void updateCurrentShijianyanzhengVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject shijianyanzheng = state
-        .currentWatermark.watermarkUIObject.shijianyanzhengText!
-        .copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(shijianyanzhengText: shijianyanzheng);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject shijianyanzheng =
+        state.currentWatermark.watermarkUIObject.shijianyanzhengText!.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(shijianyanzhengText: shijianyanzheng);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新时间验证信息
   void updateCurrentShijianyanzheng(String shijianString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject shijianyanzheng = state
-        .currentWatermark.watermarkUIObject.shijianyanzhengText!
-        .copyWith(text: shijianString);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(shijianyanzhengText: shijianyanzheng);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject shijianyanzheng =
+        state.currentWatermark.watermarkUIObject.shijianyanzhengText!.copyWith(text: shijianString);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(shijianyanzhengText: shijianyanzheng);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新经度可见性
   void updateCurrentJinduVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject jindu = state.currentWatermark.watermarkUIObject.jindu!
-        .copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(jindu: jindu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject jindu = state.currentWatermark.watermarkUIObject.jindu!.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(jindu: jindu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新jindu信息
   void updateCurrentJindu(String jinduString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject jindu = state.currentWatermark.watermarkUIObject.jindu!
-        .copyWith(text: jinduString);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(jindu: jindu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject jindu = state.currentWatermark.watermarkUIObject.jindu!.copyWith(text: jinduString);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(jindu: jindu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 纬度可见性
   void updateCurrentWeiduVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject weidu = state.currentWatermark.watermarkUIObject.weidu!
-        .copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(weidu: weidu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject weidu = state.currentWatermark.watermarkUIObject.weidu!.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(weidu: weidu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新纬度信息
   void updateCurrentWeidu(String weiduString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject weidu = state.currentWatermark.watermarkUIObject.jindu!
-        .copyWith(text: weiduString);
-    WatermarkUIObject watermarkUIObject =
-        state.currentWatermark.watermarkUIObject.copyWith(weidu: weidu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject weidu = state.currentWatermark.watermarkUIObject.jindu!.copyWith(text: weiduString);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(weidu: weidu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新自定义可见性
   void updateCurrentCustomizedVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? customized = state.currentWatermark.watermarkUIObject.customized
-        ?.copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(customized: customized);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? customized = state.currentWatermark.watermarkUIObject.customized?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(customized: customized);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新自定义信息
   void updateCurrentCustomized(String customizedString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? customized = state.currentWatermark.watermarkUIObject.customized
-        ?.copyWith(text: customizedString);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(customized: customized);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? customized = state.currentWatermark.watermarkUIObject.customized?.copyWith(text: customizedString);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(customized: customized);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新备注可见性
   void updateCurrentBeizhuVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? beizhuText = state.currentWatermark.watermarkUIObject.beizhuText
-        ?.copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(beizhuText: beizhuText);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? beizhuText = state.currentWatermark.watermarkUIObject.beizhuText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(beizhuText: beizhuText);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 更新备注信息
   void updateCurrentBeizhu(String string) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? beizhuText = state.currentWatermark.watermarkUIObject.customized
-        ?.copyWith(text: string);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(beizhuText: beizhuText);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? beizhuText = state.currentWatermark.watermarkUIObject.customized?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(beizhuText: beizhuText);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检人可见性
   void updateCurrentXunjianrenVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianren = state
-        .currentWatermark.watermarkUIObject.xunjianrenText
-        ?.copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianrenText: xunjianren);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianren = state.currentWatermark.watermarkUIObject.xunjianrenText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(xunjianrenText: xunjianren);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检人信息
   void updateCurrentXunjianren(String xunjianrenString) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianren = state
-        .currentWatermark.watermarkUIObject.xunjianrenText
-        ?.copyWith(text: xunjianrenString);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianrenText: xunjianren);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianren = state.currentWatermark.watermarkUIObject.xunjianrenText?.copyWith(text: xunjianrenString);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(xunjianrenText: xunjianren);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检区域可见性
   void updateCurrentXunjianquyuVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianquyu = state
-        .currentWatermark.watermarkUIObject.xunjianquyuText
-        ?.copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianquyuText: xunjianquyu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianquyu = state.currentWatermark.watermarkUIObject.xunjianquyuText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xunjianquyuText: xunjianquyu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检区域信息
   void updateCurrentXunjianquyu(String string) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianquyu = state
-        .currentWatermark.watermarkUIObject.xunjianquyuText
-        ?.copyWith(text: string);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianquyuText: xunjianquyu);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianquyu = state.currentWatermark.watermarkUIObject.xunjianquyuText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xunjianquyuText: xunjianquyu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检类型可见性
   void updateCurrentXunjianleixingVisible(bool visible) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianleixing = state
-        .currentWatermark.watermarkUIObject.xunjianleixingText
-        ?.copyWith(visible: visible);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianleixingText: xunjianleixing);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianleixing =
+        state.currentWatermark.watermarkUIObject.xunjianleixingText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xunjianleixingText: xunjianleixing);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
   /// 巡检类型信息
   void updateCurrentXunjianleixing(String string) {
     List<WatermarkState> watermarks = state.watermarks;
-    TextObject? xunjianleixing = state
-        .currentWatermark.watermarkUIObject.xunjianleixingText
-        ?.copyWith(text: string);
-    WatermarkUIObject watermarkUIObject = state
-        .currentWatermark.watermarkUIObject
-        .copyWith(xunjianleixingText: xunjianleixing);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    TextObject? xunjianleixing = state.currentWatermark.watermarkUIObject.xunjianleixingText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xunjianleixingText: xunjianleixing);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 速度信息
+  void updateCurrentSudu(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? suduText = state.currentWatermark.watermarkUIObject.suduText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(suduText: suduText);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// sudu可见性
+  void updateSuduVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? sudu = state.currentWatermark.watermarkUIObject.suduText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(suduText: sudu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 添加自定义字段
+  void updateCurrentTianjiazidingyi(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? tianjiazidingyi = state.currentWatermark.watermarkUIObject.tianjiazidingyixiang?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(tianjiazidingyixiang: tianjiazidingyi);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// sudu可见性
+  void updateytianjiazidingyiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? tianjiazidingyi =
+        state.currentWatermark.watermarkUIObject.tianjiazidingyixiang?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(tianjiazidingyixiang: tianjiazidingyi);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 编号
+  void updateCurrenBianhao(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? bianhao = state.currentWatermark.watermarkUIObject.bianhaoText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(bianhaoText: bianhao);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// bianhao可见性
+  void updatebianhaoVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? bianhao = state.currentWatermark.watermarkUIObject.bianhaoText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(bianhaoText: bianhao);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 海拔信信息
+  void updateCurrentHaiba(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? haiba = state.currentWatermark.watermarkUIObject.haibaText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(haibaText: haiba);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// haibakejianxing
+  void updatehaibaVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? haiba = state.currentWatermark.watermarkUIObject.haibaText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(haibaText: haiba);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 手机号信息
+  void updateCurrentshoujihao(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? shoujihao = state.currentWatermark.watermarkUIObject.shoujihaoText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(shoujihaoText: shoujihao);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 手机号可见性
+  void updateshoujihaoVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? shoujihao = state.currentWatermark.watermarkUIObject.shoujihaoText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(shoujihaoText: shoujihao);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// IMEI信息
+  void updateCurrentIMEI(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? imei = state.currentWatermark.watermarkUIObject.IMEIText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(IMEIText: imei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// IMEI可见性
+  void updateIMEIVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? imei = state.currentWatermark.watermarkUIObject.IMEIText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(IMEIText: imei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 计数信息
+  void updateCurrentjishu(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jishu = state.currentWatermark.watermarkUIObject.jishuText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(jishuText: jishu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// jishu可见性
+  void updatejishuVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jishu = state.currentWatermark.watermarkUIObject.jishuText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(jishuText: jishu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 监理负责人信息
+  void updateCurrentjianlifuzeren(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianlifuzeren = state.currentWatermark.watermarkUIObject.jianlizerenrenText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianlizerenrenText: jianlifuzeren);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 监理负责人可见性
+  void updatejianlifuzerenVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianlifuzeren = state.currentWatermark.watermarkUIObject.jianlizerenrenText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianlizerenrenText: jianlifuzeren);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 竣工倒计时
+  void updateCurrentjungongdaojishi(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jungongdaojishi = state.currentWatermark.watermarkUIObject.jungongdaojishiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jungongdaojishiText: jungongdaojishi);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 竣工倒计时可见性
+  void updatejungongdaojishiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jungong = state.currentWatermark.watermarkUIObject.jungongdaojishiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jungongdaojishiText: jungong);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 建设单位
+  void updateCurrentjianshedanwei(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianshedanwei = state.currentWatermark.watermarkUIObject.jianshedanweiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianshedanweiText: jianshedanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 建设单位可见性
+  void updatejianshedanweiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianshedanwei = state.currentWatermark.watermarkUIObject.jianshedanweiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianshedanweiText: jianshedanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 监理单位
+  void updateCurrentjianlidanwei(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianlidanwei = state.currentWatermark.watermarkUIObject.jianlidanweiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianlidanweiText: jianlidanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 监理单位可见性
+  void updatejianlidanweiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? jianlidanwei = state.currentWatermark.watermarkUIObject.jianlidanweiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(jianlidanweiText: jianlidanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 设计单位
+  void updateCurrentshejidanwei(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? shejidanwei = state.currentWatermark.watermarkUIObject.shejidanweiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(shejidanweiText: shejidanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 设计单位可见性
+  void updateshejidanweiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? shejidanwei = state.currentWatermark.watermarkUIObject.shejidanweiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(shejidanweiText: shejidanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 勘察单位
+  void updateCurrentKanchadanwei(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? kanchadanwei = state.currentWatermark.watermarkUIObject.kanchadanweiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(kanchadanweiText: kanchadanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 勘查单位可见性
+  void updatekanchadanweiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? kanchadanwei = state.currentWatermark.watermarkUIObject.kanchadanweiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(kanchadanweiText: kanchadanwei);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 描述
+  void updateCurrentmiaoshu(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? miaoshu = state.currentWatermark.watermarkUIObject.miaoshuText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(miaoshuText: miaoshu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 描述可见性
+  void updatemiaoshuVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? miaoshu = state.currentWatermark.watermarkUIObject.miaoshuText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(miaoshuText: miaoshu);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 大标题
+  void updateCurrentDabiaoti(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? dabiaoti = state.currentWatermark.watermarkUIObject.dabiaotiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(dabiaotiText: dabiaoti);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 大标题可见性
+  void updatedabiaotiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? dabiaoti = state.currentWatermark.watermarkUIObject.dabiaotiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject = state.currentWatermark.watermarkUIObject.copyWith(dabiaotiText: dabiaoti);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 小标题
+  void updateCurrentXiaobiaoti(String string) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? xiaobiaoti = state.currentWatermark.watermarkUIObject.xiaobiaotxiText?.copyWith(text: string);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xiaobiaotxiText: xiaobiaoti);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    state = state.copyWith(watermarks: watermarks);
+  }
+
+  /// 小标题可见性
+  void updatexiaobiaotiVisibility(bool visible) {
+    List<WatermarkState> watermarks = state.watermarks;
+    TextObject? xiaobiaoti = state.currentWatermark.watermarkUIObject.xiaobiaotxiText?.copyWith(visible: visible);
+    WatermarkUIObject watermarkUIObject =
+        state.currentWatermark.watermarkUIObject.copyWith(xiaobiaotxiText: xiaobiaoti);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkUIObject: watermarkUIObject);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
     state = state.copyWith(watermarks: watermarks);
   }
 
@@ -658,40 +907,51 @@ class WatermarkEditNotifier extends StateNotifier<WatermarkEditState> {
   /// 更新当前的照片的水印
   void updateCurrentPhotoWatermark(String id) {
     List<WatermarkState> watermarks = state.watermarks;
-    WatermarkItem watermarkItem =
-        state.currentWatermark.watermarkItem.copyWith(id: id);
-    WatermarkState newWatermarkState =
-        state.currentWatermark.copyWith(watermarkItem: watermarkItem);
-    watermarks.replaceRange(
-        state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
-    print(
-        "MJ: test update watermark id is $id, after ${watermarks[state.currentIndex].watermarkItem.id}");
+    WatermarkItem watermarkItem = state.currentWatermark.watermarkItem.copyWith(id: id);
+    WatermarkState newWatermarkState = state.currentWatermark.copyWith(watermarkItem: watermarkItem);
+    watermarks.replaceRange(state.currentIndex, state.currentIndex + 1, [newWatermarkState]);
+    print("MJ: test update watermark id is $id, after ${watermarks[state.currentIndex].watermarkItem.id}");
     state = state.copyWith(watermarks: watermarks);
   }
 }
 
-final watermarkEditProvider =
-    StateNotifierProvider<WatermarkEditNotifier, WatermarkEditState>((ref) {
+final watermarkEditProvider = StateNotifierProvider<WatermarkEditNotifier, WatermarkEditState>((ref) {
   return WatermarkEditNotifier();
 });
 
 class WatermarkVisibleMap {
-  final bool dateTime;
-  final bool weidu;
-  final bool jindu;
-  final bool position;
-  final bool weather;
+  final bool dateTime; //时间
+  final bool weidu; //纬度
+  final bool jindu; //经度
+  final bool position; //地点
+  final bool weather; //天气
   final bool imageUrl;
-  final bool customized;
-  final bool dakabiaotiText;
-  final bool beizhuText;
-  final bool shijianyanzhengText;
-  final bool gongchengmingchengText;
-  final bool shigongdanweiText;
-  final bool xunjianrenText;
-  final bool xunjianleixingText;
-  final bool xunjianquyuText;
-  final bool zhuchirenText;
+  final bool customized; //自定义
+  final bool dakabiaotiText; //打卡标题
+  final bool beizhuText; //备注
+  final bool shijianyanzhengText; //时间验证
+  final bool gongchengmingchengText; // 工程名称
+  final bool shigongdanweiText; //施工单位
+  final bool xunjianrenText; //巡检人
+  final bool xunjianleixingText; //巡检类型
+  final bool xunjianquyuText; //巡检区域
+  final bool zhuchirenText; // 主持人
+  final bool suduText; //速度
+  final bool tianjiazidingyixiang; //添加自定义项
+  final bool bianhaoText; //编号
+  final bool haibaText; //海拔
+  final bool shoujihaoText; //手机号
+  final bool IMEIText; //IMEI
+  final bool jishuText; //计数
+  final bool jianlizerenrenText; // 监理责任人
+  final bool jungongdaojishiText; // 竣工倒计时
+  final bool jianshedanweiText; //建设单位
+  final bool jianlidanweiText; //监理单位
+  final bool shejidanweiText; //设计单位
+  final bool kanchadanweiText; //勘察单位
+  final bool miaoshuText; // 描述
+  final bool dabiaotiText; //大标题
+  final bool xiaobiaotiText; // 小标题
 
   WatermarkVisibleMap({
     this.dateTime = false,
@@ -710,5 +970,21 @@ class WatermarkVisibleMap {
     this.xunjianleixingText = false,
     this.xunjianquyuText = false,
     this.zhuchirenText = false,
+    this.suduText = false,
+    this.tianjiazidingyixiang = true,
+    this.bianhaoText = false,
+    this.haibaText = false,
+    this.shoujihaoText = false,
+    this.IMEIText = false,
+    this.jishuText = false,
+    this.jianlizerenrenText = false,
+    this.jungongdaojishiText = false,
+    this.jianshedanweiText = false,
+    this.jianlidanweiText = false,
+    this.shejidanweiText = false,
+    this.kanchadanweiText = false,
+    this.miaoshuText = false,
+    this.dabiaotiText = false,
+    this.xiaobiaotiText = false,
   });
 }

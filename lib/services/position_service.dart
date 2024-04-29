@@ -64,7 +64,6 @@ class PositionService {
 
   static Future<String> getWeather() async {
     String locationID = await getLocationId();
-    print("MJ: test weather is locationid $locationID");
     final response = await http.get(Uri.parse(
         'https://devapi.qweather.com/v7/weather/3d?location=$locationID&key=${Constants.WEATHER_API_KEY}'));
 

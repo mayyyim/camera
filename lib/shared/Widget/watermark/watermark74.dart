@@ -12,6 +12,7 @@ class Watermark74 extends WaterMarkWidget {
           watermarkVisibleMap: WatermarkVisibleMap(
             dateTime: true,
             beizhuText: true,
+            suduText: true,
             position: true,
             zhuchirenText: true,
           ),
@@ -82,6 +83,11 @@ class Watermark74 extends WaterMarkWidget {
             Visibility(
               visible: watermarkUIObject.beizhuText?.visible ?? false,
               child: Text("备注: ${watermarkUIObject.beizhuText?.text ?? ""}",
+                  style: Style.watermarkSmallBlack),
+            ),
+            Visibility(
+              visible: watermarkUIObject.suduText?.visible ?? false,
+              child: Text("速度: ${watermarkUIObject.suduText?.text ?? ""}",
                   style: Style.watermarkSmallBlack),
             ),
           ]),

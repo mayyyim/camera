@@ -14,6 +14,7 @@ class Watermark65 extends WaterMarkWidget {
             jindu: true,
             weidu: true,
             beizhuText: true,
+            suduText: true,
             position: true,
             shijianyanzhengText: true,
           ),
@@ -23,9 +24,7 @@ class Watermark65 extends WaterMarkWidget {
   Widget build(BuildContext context) {
     return Container(
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+      decoration: const BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.all(Radius.circular(5))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -42,10 +41,7 @@ class Watermark65 extends WaterMarkWidget {
                   child: Text(
                     "${watermarkUIObject.hour.text}:${watermarkUIObject.minute.text}",
                     style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: "clock"),
+                        fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600, fontFamily: "clock"),
                   ),
                 ),
                 Visibility(
@@ -68,8 +64,7 @@ class Watermark65 extends WaterMarkWidget {
                           color: Colors.white,
                           size: 15,
                         ),
-                        Text(
-                            "${watermarkUIObject.jindu?.text} ${watermarkUIObject.weidu?.text}",
+                        Text("${watermarkUIObject.jindu?.text} ${watermarkUIObject.weidu?.text}",
                             style: Style.watermarkSmallWhite),
                       ],
                     )),
@@ -82,8 +77,7 @@ class Watermark65 extends WaterMarkWidget {
                         color: Colors.white,
                         size: 15,
                       ),
-                      Text("${watermarkUIObject.location?.text}",
-                          style: Style.watermarkSmallWhite),
+                      Text("${watermarkUIObject.location?.text}", style: Style.watermarkSmallWhite),
                     ],
                   ),
                 ),
@@ -96,17 +90,26 @@ class Watermark65 extends WaterMarkWidget {
                         color: Colors.white,
                         size: 15,
                       ),
-                      Text("${watermarkUIObject.beizhuText?.text}",
-                          style: Style.watermarkSmallWhite),
+                      Text("${watermarkUIObject.beizhuText?.text}", style: Style.watermarkSmallWhite),
                     ],
                   ),
                 ),
                 Visibility(
-                  visible:
-                      watermarkUIObject.shijianyanzhengText?.visible ?? false,
-                  child: Text(
-                      "${watermarkUIObject.shijianyanzhengText?.text ?? ""}",
-                      style: Style.watermarkSmallWhite),
+                  visible: watermarkUIObject.suduText?.visible ?? false,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.speed_outlined,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                      Text("速度：${watermarkUIObject.suduText?.text}", style: Style.watermarkSmallWhite),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: watermarkUIObject.shijianyanzhengText?.visible ?? false,
+                  child: Text("${watermarkUIObject.shijianyanzhengText?.text ?? ""}", style: Style.watermarkSmallWhite),
                 ),
               ],
             ),
